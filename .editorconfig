@@ -1,0 +1,14 @@
+# EditorConfig is awesome: http://EditorConfig.org
+
+# top-most EditorConfig file
+root = true
+
+# For each file
+[*]
+charset = utf-8
+end_of_line = l
+indent_size = 4
+insert_final_newline = true
+indent_style = space
+max_line_length = 120
+trim_trailing_whitespace = true
