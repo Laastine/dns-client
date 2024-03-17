@@ -124,7 +124,7 @@ fn process_server_response(response: Vec<u8>, msg_id: (u8, u8)) {
     let qtype = construct_u16_from_u8(iter.next(), iter.next());
     println!(
         "QTYPE: {:?}",
-        RecordType::try_from(qtype).expect("Invalid question type")
+        QueryType::try_from(qtype).expect("Invalid question type")
     );
     println!(
         "QCLASS: {:?}",
@@ -193,7 +193,8 @@ impl TryFrom<u16> for ResponseCode {
 }
 
 #[derive(Clone, Debug, Eq, PartialEq)]
-enum RecordType {
+enum QueryType {
+    Unknown = 0,
     A = 1,
     Ns = 2,
     Cname = 5,
@@ -202,21 +203,25 @@ enum RecordType {
     Ptr = 12,
     Mx = 15,
     Txt = 16,
+    Aaaa = 28,
+
 }
 
-impl TryFrom<u16> for RecordType {
+impl TryFrom<u16> for QueryType {
     type Error = &'static str;
 
-    fn try_from(v: u16) -> Result<RecordType, Self::Error> {
+    fn try_from(v: u16) -> Result<QueryType, Self::Error> {
         match v {
-            v if v == RecordType::A as u16 => Ok(RecordType::A),
-            v if v == RecordType::Ns as u16 => Ok(RecordType::Ns),
-            v if v == RecordType::Cname as u16 => Ok(RecordType::Cname),
-            v if v == RecordType::Soa as u16 => Ok(RecordType::Soa),
-            v if v == RecordType::Wks as u16 => Ok(RecordType::Wks),
-            v if v == RecordType::Ptr as u16 => Ok(RecordType::Ptr),
-            v if v == RecordType::Mx as u16 => Ok(RecordType::Mx),
-            v if v == RecordType::Txt as u16 => Ok(RecordType::Txt),
+            v if v == QueryType::Unknown as u16 => Ok(QueryType::Unknown),
+            v if v == QueryType::A as u16 => Ok(QueryType::A),
+            v if v == QueryType::Ns as u16 => Ok(QueryType::Ns),
+            v if v == QueryType::Cname as u16 => Ok(QueryType::Cname),
+            v if v == QueryType::Soa as u16 => Ok(QueryType::Soa),
+            v if v == QueryType::Wks as u16 => Ok(QueryType::Wks),
+            v if v == QueryType::Ptr as u16 => Ok(QueryType::Ptr),
+            v if v == QueryType::Mx as u16 => Ok(QueryType::Mx),
+            v if v == QueryType::Txt as u16 => Ok(QueryType::Txt),
+            v if v == QueryType::Aaaa as u16 => Ok(QueryType::Aaaa),
             _ => Err("RecordType value not found"),
         }
     }
